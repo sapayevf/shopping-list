@@ -12,12 +12,25 @@ const App = () => {
     location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <Layout style={{ minHeight: "100vh", background: "#f0f2f5" }}>
+    <Layout
+      style={{
+        minHeight: hideLayout ? "100vh" : "100%",
+        background: "#f0f2f5",
+        overflow: "hidden",
+      }}
+    >
       {!hideLayout && <Sidebar />}
-      <Layout>
+      <Layout style={{ }}>
         {!hideLayout && <AppHeader />}
         <Content
-          style={{ padding: "20px", maxWidth: "1500px", margin: "0 auto" }}
+          style={{
+            padding: hideLayout ? "0" : "20px",
+            maxWidth: "1500px",
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           <Router />
         </Content>

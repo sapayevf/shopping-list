@@ -16,7 +16,6 @@ const Sidebar = () => {
         position: "fixed",
         left: 0,
         top: 0,
-        paddingTop: "20px",
       }}
     >
       <Menu
