@@ -1,0 +1,44 @@
+.group-detail {
+  padding: 20px;
+  h1 {
+    color: #333;
+  }
+  p {
+    font-size: 18px;
+    color: #555;
+  }
+}
+
+.group-search {
+  width: 400px;
+  position: relative;
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+    width: 100%;
+    position: absolute;
+    top: 55px;
+    max-height: 300px;
+    overflow-y: auto;
+
+    .groups {
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid rgb(229, 225, 225);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+p {
+  line-height: 20px;
+}
+h3 {
+  line-height: 33px;
+}

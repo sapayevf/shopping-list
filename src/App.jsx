@@ -14,19 +14,28 @@ const App = () => {
   return (
     <Layout
       style={{
-        minHeight: hideLayout ? "100vh" : "100%",
+        minHeight: "100vh",
         background: "#f0f2f5",
-        overflow: "hidden",
+        display: "flex",
+        flexDirection: "row", 
       }}
     >
       {!hideLayout && <Sidebar />}
-      <Layout style={{ }}>
+
+      <Layout
+        style={{
+          flex: 1, 
+          display: "flex",
+          flexDirection: "column", 
+        }}
+      >
         {!hideLayout && <AppHeader />}
         <Content
           style={{
             padding: hideLayout ? "0" : "20px",
             maxWidth: "1500px",
             margin: "0 auto",
+            flex: 1,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

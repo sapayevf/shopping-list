@@ -1,40 +1,40 @@
-import { Layout, Menu } from "antd";
-import { UserOutlined, TeamOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
-const { Sider } = Layout;
+import "./Sidebar.scss";
 
 const Sidebar = () => {
+  const [groups, setGroups] = useState([
+    { _id: "1", name: "Group 1" },
+  ]);
+  const [groupName, setGroupName] = useState("");
+
+  const addGroup = () => {
+    if (groupName.trim()) {
+      setGroups([...groups, { _id: Date.now().toString(), name: groupName }]);
+      setGroupName("");
+    }
+  };
+
   return (
-    <Sider
-      width={250}
-      style={{
-        height: "100vh",
-        marginTop: "60px",
-        background: "#fff",
-        boxShadow: "2px 0 8px rgba(0, 0, 0, 0.1)",
-        position: "fixed",
-        left: 0,
-        top: 0,
-      }}
-    >
-      <Menu
-        mode="vertical"
-        defaultSelectedKeys={["1"]}
-        style={{ borderRight: 0 }}
-      >
-        <Menu.Item key="1" icon={<UserOutlined />}>
-          <Link to="/">Profile</Link>
-        </Menu.Item>
-        <Menu.SubMenu key="2" icon={<TeamOutlined />} title="Groups">
-          <Menu.Item key="3">My Groups</Menu.Item>
-          <Menu.Item key="4">Explore</Menu.Item>
-        </Menu.SubMenu>
-        <Menu.Item key="5" icon={<PlusOutlined />}>
-          <Link to="/create-group">Create Group</Link>
-        </Menu.Item>
-      </Menu>
-    </Sider>
+    <div className="sidebar">
+      <h2>Groups</h2>
+      <ul>
+        {groups.map((group) => (
+          <li key={group._id}>
+            <Link to={`/groupdetail`}>{group.name}</Link>
+          </li>
+        ))}
+      </ul>
+      <div className="add-group">
+        <input
+          type="text"
+          value={groupName}
+          onChange={(e) => setGroupName(e.target.value)}
+          placeholder="Enter group name"
+        />
+        <button onClick={addGroup}>Add</button>
+      </div>
+    </div>
   );
 };
 
