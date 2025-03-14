@@ -8,6 +8,7 @@ const login = async ({ username, password }) => {
     username,
     password,
   });
+  console.log("Login API Response:", res);
   return res;
 };
 
@@ -26,7 +27,7 @@ const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: login,
     onSuccess(data) {
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.data.token);
       navigate("/");
       toast.success("Login succsessfull");
     },
@@ -38,7 +39,7 @@ const useAuth = () => {
   const registerMutation = useMutation({
     mutationFn: register,
     onSuccess(data) {
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", data.data.token);
       navigate("/");
       toast.success("Register succsessfull");
     },

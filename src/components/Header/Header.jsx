@@ -2,12 +2,17 @@ import { Layout, Input, Button, Badge } from "antd";
 import { Link } from "react-router-dom";
 import { FiSearch, FiBell, FiSettings, FiRefreshCw } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
+import { useState } from "react";
+import useGroups from "../../hooks/useGroups";
+import "./Header.scss";
 
 const { Header } = Layout;
 
 const AppHeader = () => {
   const { logout } = useAuth();
 
+  const [search, setSearch] = useState("");
+  const { groups, groupsLoading } = useGroups(search);
   return (
     <Header
       style={{
@@ -17,7 +22,7 @@ const AppHeader = () => {
         background: "#fff",
         padding: "10px 20px",
         boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        zIndex: "5"
+        zIndex: "5",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -32,12 +37,33 @@ const AppHeader = () => {
         </Button>
       </div>
 
-      <Input
-        placeholder="Search group and join..."
-        prefix={<FiSearch />}
-        style={{ width: "300px", borderRadius: "20px" }}
-      />
-
+      <div className="group-search">
+        <div className="input-group">
+          <Input
+            placeholder="Search group and join..."
+            prefix={<FiSearch />}
+            style={{ width: "400px", borderRadius: "20px" }}
+            value={search}
+            className="input-search"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search.length > 0 && (
+            <div className="content">
+              {groupsLoading && <p>Loading...</p>}
+              {groups?.map((user) => (
+                <div key={user._id} className="groups">
+                  {console.log(user)}
+                  <div className="">
+                    <h3>{user.name}</h3>
+                    <p>Created by {user.owner.name}</p>
+                  </div>
+                  <Button type="primary">Join</Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
         <FiRefreshCw size={22} style={{ cursor: "pointer" }} />
         <Badge count={9} size="small">
