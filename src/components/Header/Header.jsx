@@ -1,4 +1,4 @@
-import { Layout, Input, Button, Badge } from "antd";
+import { Layout, Input, Button, Badge, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { FiSearch, FiBell, FiSettings, FiRefreshCw } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
@@ -10,9 +10,31 @@ const { Header } = Layout;
 
 const AppHeader = () => {
   const { logout } = useAuth();
-
   const [search, setSearch] = useState("");
-  const { groups, groupsLoading } = useGroups(search);
+  const { groups, groupsLoading, joinGroup } = useGroups(search);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [password, setPassword] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleJoinClick = (group) => {
+    setSelectedGroup(group);
+    setPassword("");
+    setModalOpen(true);
+  };
+
+  const handleJoinGroup = async () => {
+    if (!selectedGroup) return;
+    setLoading(true);
+    try {
+      await joinGroup({ groupId: selectedGroup._id, password });
+      setModalOpen(false);
+    } catch (error) {
+      console.error("Join failed:", error);
+    }
+    setLoading(false);
+  };
+
   return (
     <Header
       style={{
@@ -50,20 +72,22 @@ const AppHeader = () => {
           {search.length > 0 && (
             <div className="content">
               {groupsLoading && <p>Loading...</p>}
-              {groups?.map((user) => (
-                <div key={user._id} className="groups">
-                  {console.log(user)}
-                  <div className="">
-                    <h3>{user.name}</h3>
-                    <p>Created by {user.owner.name}</p>
+              {groups?.map((group) => (
+                <div key={group._id} className="groups">
+                  <div>
+                    <h3>{group.name}</h3>
+                    <p>Created by {group.owner.name}</p>
                   </div>
-                  <Button type="primary">Join</Button>
+                  <Button type="primary" onClick={() => handleJoinClick(group)}>
+                    Join
+                  </Button>
                 </div>
               ))}
             </div>
           )}
         </div>
       </div>
+
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
         <FiRefreshCw size={22} style={{ cursor: "pointer" }} />
         <Badge count={9} size="small">
@@ -74,6 +98,31 @@ const AppHeader = () => {
           Logout
         </Button>
       </div>
+
+      <Modal
+        title="Enter Group Password"
+        open={modalOpen}
+        onCancel={() => setModalOpen(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setModalOpen(false)}>
+            Cancel
+          </Button>,
+          <Button
+            key="join"
+            type="primary"
+            loading={loading}
+            onClick={handleJoinGroup}
+          >
+            Join
+          </Button>,
+        ]}
+      >
+        <Input.Password
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </Modal>
     </Header>
   );
 };

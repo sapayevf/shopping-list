@@ -1,9 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import API from "../utils/API";
 
-const fetchGroups = async () => {
+const fetchGroups = async (search) => {
   try {
-    const { data } = await API.get("/groups");
+    const endpoint = search ? `/groups/search?q=${search}` : "/groups";
+    const { data } = await API.get(endpoint);
     return data;
   } catch (error) {
     console.error("Error fetching groups:", error);
@@ -21,25 +22,43 @@ const createGroupRequest = async (groupData) => {
   }
 };
 
-const useGroups = () => {
+const joinGroupRequest = async ({ groupId, password }) => {
+  try {
+    const { data } = await API.post(`/groups/${groupId}/join`, { password });
+    return data;
+  } catch (error) {
+    console.error("Group join failed:", error);
+    throw error;
+  }
+};
+
+const useGroups = (search) => {
   const queryClient = useQueryClient();
 
-  const { data: groups = [], isLoading } = useQuery({
-    queryKey: ["groups"],
-    queryFn: fetchGroups,
+  const { data: groups = [], isLoading: groupsLoading } = useQuery({
+    queryKey: ["groups", search],
+    queryFn: () => fetchGroups(search),
   });
 
   const createGroupMutation = useMutation({
     mutationFn: createGroupRequest,
     onSuccess: () => {
-      queryClient.invalidateQueries(["groups"]); 
+      queryClient.invalidateQueries(["groups"]);
+    },
+  });
+
+  const joinGroupMutation = useMutation({
+    mutationFn: joinGroupRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"]);
     },
   });
 
   return {
     groups,
-    isLoading,
+    groupsLoading,
     createGroup: createGroupMutation.mutate,
+    joinGroup: joinGroupMutation.mutateAsync,
   };
 };
 
