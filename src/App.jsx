@@ -34,11 +34,7 @@ const App = () => {
           style={{
             padding: hideLayout ? "0" : "20px",
             maxWidth: "1500px",
-            margin: "0 auto",
-            flex: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            height : "100%"
           }}
         >
           <Router />

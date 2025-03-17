@@ -1,44 +1,24 @@
-.group-detail {
-  padding: 20px;
-  h1 {
-    color: #333;
-  }
-  p {
-    font-size: 18px;
-    color: #555;
-  }
-}
-
-.group-search {
-  width: 400px;
-  position: relative;
-  .content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    background-color: #fff;
-    padding: 20px;
+.group-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  width: 100%;
+  .group-title {
+    width: 48%;
+    background-color: white;
     border-radius: 20px;
-    width: 100%;
-    position: absolute;
-    top: 55px;
-    max-height: 300px;
-    overflow-y: auto;
-
-    .groups {
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid rgb(229, 225, 225);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    padding: 20px;
+  }
+  .group-members {
+    width: 48%;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
   }
 }
 
-p {
-  line-height: 20px;
-}
-h3 {
-  line-height: 33px;
+.modal-member {
+  height: 400px;
+  overflow-y: auto;
 }

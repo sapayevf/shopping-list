@@ -1,31 +1,45 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import API from "../utils/API";
 
-const searchGroup = async (searchText) => {
-  if (!searchText || searchText.length < 2) return [];
-
+const fetchGroups = async () => {
   try {
-    const { data } = await API.get(`/groups/search?q=${searchText}`);
+    const { data } = await API.get("/groups");
     return data;
   } catch (error) {
-    console.error("Group search failed:", error);
+    console.error("Error fetching groups:", error);
     return [];
   }
 };
 
-const useGroups = (searchText) => {
-  const { data: groups = [], isLoading: groupsLoading } = useQuery({
-    queryKey: searchText.length > 1 ? ["search", searchText] : ["search"],
-    queryFn: () => searchGroup(searchText),
-    enabled: searchText.length > 1,
-    onError: (error) => {
-      console.error("Error fetching groups:", error);
+const createGroupRequest = async (groupData) => {
+  try {
+    const { data } = await API.post("/groups", groupData);
+    return data;
+  } catch (error) {
+    console.error("Group creation failed:", error);
+    return null;
+  }
+};
+
+const useGroups = () => {
+  const queryClient = useQueryClient();
+
+  const { data: groups = [], isLoading } = useQuery({
+    queryKey: ["groups"],
+    queryFn: fetchGroups,
+  });
+
+  const createGroupMutation = useMutation({
+    mutationFn: createGroupRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["groups"]); 
     },
   });
 
   return {
     groups,
-    groupsLoading,
+    isLoading,
+    createGroup: createGroupMutation.mutate,
   };
 };
 

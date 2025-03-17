@@ -14,6 +14,7 @@ const Router = () => {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/group/:groupId" element={<GroupDetail />} />
     </Routes>
   );
 };
