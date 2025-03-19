@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import { useLocation } from "react-router-dom";
 import Router from "./router/router";
-import AppHeader from "./components/Header/Header";
+import AppHeader from "./components/Header/AppHeader";
 import Sidebar from "./components/Sidebar/Sidebar";
 
 const { Content } = Layout;
