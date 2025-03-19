@@ -3,7 +3,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import PrivateRouter from "./PrivateRouter";
 import Profile from "../pages/Profile/Profile";
-import GroupDetail from "../pages/Group/Group";
+import GroupDetail from "../pages/GroupDetail/GroupDetail";
 
 const Router = () => {
   return (
