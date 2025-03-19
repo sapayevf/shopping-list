@@ -4,7 +4,7 @@ import { FiSearch, FiBell, FiSettings, FiRefreshCw } from "react-icons/fi";
 import useAuth from "../../hooks/useAuth";
 import { useState } from "react";
 import useGroups from "../../hooks/useGroups";
-import "./Header.scss";
+import "./AppHeader.scss";
 
 const { Header } = Layout;
 

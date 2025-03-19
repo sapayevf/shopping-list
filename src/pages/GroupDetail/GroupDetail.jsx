@@ -6,7 +6,7 @@ import useUsers from "../../hooks/useUsers";
 import useAuth from "../../hooks/useAuth";
 import API from "../../utils/API";
 import { FiSearch } from "react-icons/fi";
-import "./Group.scss";
+import "./GroupDetail.scss";
 
 const GroupDetail = () => {
   const { groupId } = useParams();
