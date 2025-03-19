@@ -1,64 +1,64 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import API from "../utils/API";
+import { message } from "antd";
 
-const fetchGroups = async (search) => {
-  try {
-    const endpoint = search ? `/groups/search?q=${search}` : "/groups";
-    const { data } = await API.get(endpoint);
-    return data;
-  } catch (error) {
-    console.error("Error fetching groups:", error);
-    return [];
-  }
+const fetchGroups = async () => {
+  const { data } = await API.get("/groups");
+  return data;
 };
 
-const createGroupRequest = async (groupData) => {
-  try {
-    const { data } = await API.post("/groups", groupData);
-    return data;
-  } catch (error) {
-    console.error("Group creation failed:", error);
-    return null;
-  }
+const addMember = async ({ groupId, memberId }) => {
+  await API.post(`/groups/${groupId}/members`, { memberId });
 };
 
-const joinGroupRequest = async ({ groupId, password }) => {
-  try {
-    const { data } = await API.post(`/groups/${groupId}/join`, { password });
-    return data;
-  } catch (error) {
-    console.error("Group join failed:", error);
-    throw error;
-  }
-};
-
-const useGroups = (search) => {
+const useGroups = () => {
   const queryClient = useQueryClient();
 
-  const { data: groups = [], isLoading: groupsLoading } = useQuery({
-    queryKey: ["groups", search],
-    queryFn: () => fetchGroups(search),
+  const {
+    data: groups = [],
+    isLoading: groupsLoading,
+    refetch: refetchGroups,
+  } = useQuery({
+    queryKey: ["groups"],
+    queryFn: fetchGroups,
   });
 
-  const createGroupMutation = useMutation({
-    mutationFn: createGroupRequest,
+  const getGroupMembers = async (groupId) => {
+    try {
+      return await fetchMembers(groupId);
+    } catch (error) {
+      console.error("Error fetching group members:", error);
+      return [];
+    }
+  };
+
+  const fetchMembers = async () => {
+    try {
+      const response = await API.get(`/groups/${groupId}/members`);
+      setMembers(response.data);
+    } catch (error) {
+      console.error("Error fetching members:", error);
+      message.error("Failed to load members.");
+    }
+  };
+
+  const addMemberMutation = useMutation({
+    mutationFn: addMember,
     onSuccess: () => {
+      message.success("Member added successfully!");
       queryClient.invalidateQueries(["groups"]);
     },
-  });
-
-  const joinGroupMutation = useMutation({
-    mutationFn: joinGroupRequest,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["groups"]);
+    onError: () => {
+      message.error("Failed to add member.");
     },
   });
 
   return {
     groups,
     groupsLoading,
-    createGroup: createGroupMutation.mutate,
-    joinGroup: joinGroupMutation.mutateAsync,
+    refetchGroups,
+    getGroupMembers,
+    addMemberMutation,
   };
 };
 
