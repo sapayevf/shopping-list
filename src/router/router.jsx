@@ -10,11 +10,10 @@ const Router = () => {
     <Routes>
       <Route path="/" element={<PrivateRouter />}>
         <Route path="/" element={<Profile />} />
-        <Route path="/groupdetail" element={<GroupDetail />} />
+        <Route path="/group/:groupId" element={<GroupDetail />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/group/:groupId" element={<GroupDetail />} />
     </Routes>
   );
 };
